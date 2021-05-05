@@ -3,8 +3,8 @@ package settingutil
 import (
 	"encoding/json"
 
-	"github.com/warrior21st/goutils/commonutil"
-	"github.com/warrior21st/goutils/jsonutil"
+	"github.com/warrior21st/go-utils/commonutil"
+	"github.com/warrior21st/go-utils/jsonutil"
 )
 
 var settingCache interface{}

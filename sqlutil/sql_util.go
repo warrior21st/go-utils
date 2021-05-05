@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/warrior21st/goutils/timeutil"
+	"github.com/warrior21st/go-utils/timeutil"
 )
 
 //string数组转sql条件string

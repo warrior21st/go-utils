@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/warrior21st/goutils/commonutil"
+	"github.com/warrior21st/go-utils/commonutil"
 )
 
 //读取json指定key的值，嵌套key使用":"分隔，如"AppSettings:DBConnectionString"

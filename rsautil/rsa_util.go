@@ -8,7 +8,7 @@ import (
 	"encoding/pem"
 	"errors"
 
-	"github.com/warrior21st/goutils/base58util"
+	"github.com/warrior21st/go-utils/base58util"
 )
 
 //加密-使用1024位n，明文最大117字节数据（pkcs1占11字节）

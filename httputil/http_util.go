@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/warrior21st/goutils/commonutil"
+	"github.com/warrior21st/go-utils/commonutil"
 )
 
 // HasLocalIPddr 检测 IP 地址字符串是否是内网地址

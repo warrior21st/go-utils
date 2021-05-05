@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 
-	"github.com/warrior21st/goutils/base58util"
+	"github.com/warrior21st/go-utils/base58util"
 	"golang.org/x/crypto/pbkdf2"
 	"golang.org/x/crypto/sha3"
 )
