@@ -72,7 +72,7 @@ func ReadJsonValFromDecodedBytes(f interface{}, keys string) string {
 	return string(val)
 }
 
-func SerializeJson(val *interface{}) *string {
+func Serialize(val *interface{}) *string {
 	bytes, err := json.Marshal(val)
 	if err == nil {
 		panic(err)
