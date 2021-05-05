@@ -2,19 +2,38 @@ package settingutil
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/warrior21st/go-utils/commonutil"
 	"github.com/warrior21st/go-utils/jsonutil"
 )
 
-var settingCache interface{}
+var (
+	_settingsCache   interface{}
+	_settingFilePath string
+)
 
 //获取指定设置，嵌套key使用":"分隔，如"AppSettings:DBConnectionString"
 func GetAppSetting(keys string) string {
-	if settingCache == nil {
-		settingFilePath := commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.json")
-		json.Unmarshal(commonutil.ReadFileBytes(settingFilePath), &settingCache)
+	if _settingsCache == nil {
+		_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.test.json")
+		if !commonutil.IsExistPath(_settingFilePath) {
+			_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.production.json")
+		}
+		if !commonutil.IsExistPath(_settingFilePath) {
+			_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.json")
+		}
+		if !commonutil.IsExistPath(_settingFilePath) {
+			panic(errors.New("can not find setting file in " + commonutil.GetProgramRootPath() + "."))
+		}
+
+		json.Unmarshal(commonutil.ReadFileBytes(_settingFilePath), &_settingsCache)
 	}
 
-	return jsonutil.ReadJsonValFromDecodedBytes(settingCache, keys)
+	return jsonutil.ReadJsonValFromDecodedBytes(_settingsCache, keys)
+}
+
+//获取appsetting文件位置
+func SettingFilePath() string {
+	return _settingFilePath
 }
