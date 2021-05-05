@@ -6,7 +6,6 @@ import (
 
 	"github.com/warrior21st/go-utils/commonutil"
 	"github.com/warrior21st/go-utils/jsonutil"
-	"github.com/warrior21st/goutils/commonutil"
 )
 
 var (
