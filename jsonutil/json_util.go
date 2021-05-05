@@ -80,13 +80,3 @@ func SerializeJson(val *interface{}) *string {
 
 	return commonutil.BytesToStringNoCopy(&bytes)
 }
-
-// func DesJson(jsonStr string) map[string]string {
-// 	var f interface{}
-// 	err := json.Unmarshal([]byte(jsonStr), &f)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	m := f.(map[string]interface{})
-
-// }
