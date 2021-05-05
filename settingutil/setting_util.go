@@ -34,6 +34,6 @@ func GetAppSetting(keys string) string {
 }
 
 //获取appsetting文件位置
-func SettingFilePath() string {
+func GetSettingFilePath() string {
 	return _settingFilePath
 }
