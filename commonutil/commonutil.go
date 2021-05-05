@@ -208,7 +208,7 @@ func IsExistPath(path string) bool {
 
 //十进制左移
 func DecimalLeftShift(d decimal.Decimal, decimals int) decimal.Decimal {
-	return decimal.NewFromBigInt(d, 0).DivRound(decimal.NewFromInt(10).Pow(decimal.NewFromInt(decimals)), decimals)
+	return d.DivRound(decimal.NewFromInt(10).Pow(decimal.NewFromInt(decimals)), decimals)
 }
 
 //十进制右移
