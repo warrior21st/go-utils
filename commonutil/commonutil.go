@@ -207,12 +207,12 @@ func IsExistPath(path string) bool {
 }
 
 //十进制左移
-func DecimalLeftShift(d decimal.Decimal, decimals int) decimal.Decimal {
+func DecimalLeftShift(d decimal.Decimal, decimals int64) decimal.Decimal {
 	return d.DivRound(decimal.NewFromInt(10).Pow(decimal.NewFromInt(decimals)), decimals)
 }
 
 //十进制右移
-func DecimalRightShift(d decimal.Decimal, decimals int) decimal.Decimal {
+func DecimalRightShift(d decimal.Decimal, decimals int64) decimal.Decimal {
 	return d.Mul(decimal.NewFromInt(10).Pow(decimal.NewFromInt(decimals)))
 }
 
