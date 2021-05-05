@@ -1,6 +1,7 @@
 package commonutil
 
 import (
+	"encoding/binary"
 	"io/ioutil"
 	"math/big"
 	"os"
@@ -224,4 +225,22 @@ func DecimalToBytes(d decimal.Decimal) []byte {
 //[]byte转decimal
 func BytesToDecimal(bytes []byte) decimal.Decimal {
 	return decimal.NewFromBigInt(new(big.Int).SetBytes(bytes), 0)
+}
+
+func Int64ToBytes(i int64) []byte {
+	s1 := make([]byte, 8)
+	binary.BigEndian.PutUint64(s1, uint64(i))
+	return s1
+}
+
+func Int32ToBytes(i int64) []byte {
+	s1 := make([]byte, 4)
+	binary.BigEndian.PutUint32(s1, uint32(i))
+	return s1
+}
+
+func IntToBytes(i int) []byte {
+	s1 := make([]byte, 8)
+	binary.BigEndian.PutUint64(s1, uint64(i))
+	return s1
 }
