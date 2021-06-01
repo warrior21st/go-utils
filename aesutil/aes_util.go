@@ -97,7 +97,7 @@ func pkcs7UnPadding(origData []byte) []byte {
 	return origData[:(length - unpadding)]
 }
 
-//使用AES-GCM加密
+//使用AES-GCM加密(nonce必须为12位)
 func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
 	shaBytes:=sha256.Sum256(key)
     block, err := aes.NewCipher(shaBytes[:])
@@ -112,7 +112,7 @@ func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
     return ciphertext
 }
 
-//使用AES-GCM解密
+//使用AES-GCM解密(nonce必须为12位)
 func AesGCMDecrypt(ciphertext, key, nonce []byte) []byte {
 	shaBytes:=sha256.Sum256(key)
     block, err := aes.NewCipher(shaBytes[:])
