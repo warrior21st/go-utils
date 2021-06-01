@@ -96,3 +96,34 @@ func pkcs7UnPadding(origData []byte) []byte {
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
 }
+
+//使用AES-GCM加密
+func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        panic(err.Error())
+    }
+    aesgcm, err := cipher.NewGCM(block)
+    if err != nil {
+        panic(err.Error())
+    }
+    ciphertext := aesgcm.Seal(nil, nonce, plaintext, nil)
+    return ciphertext
+}
+
+//使用AES-GCM解密
+func AesGCMDecrypt(ciphertext, key, nonce []byte) []byte {
+    block, err := aes.NewCipher(key)
+    if err != nil {
+        panic(err.Error())
+    }
+    aesgcm, err := cipher.NewGCM(block)
+    if err != nil {
+        panic(err.Error())
+    }
+    plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)
+    if err != nil {
+        panic(err.Error())
+    }
+    return plaintext
+}
