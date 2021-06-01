@@ -30,8 +30,8 @@ func AesDecryptByDefault(orig string, key string) string {
 func AesEncrypt(orig string, key string, salt []byte, useBase58 bool) string {
 	// 转成字节数组
 	origData := []byte(orig)
-	shab := sha256.Sum256([]byte(key))
-	k := pbkdf2.Key(shab[:], salt, iterationCount, 32, sha3.New256)
+	shaBytes := sha256.Sum256([]byte(key))
+	k := pbkdf2.Key(shaBytes[:], salt, iterationCount, 32, sha3.New256)
 	// 分组秘钥
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
@@ -61,8 +61,8 @@ func AesDecrypt(cryted string, key string, salt []byte, useBase58 bool) string {
 	} else {
 		crytedByte, _ = base64.StdEncoding.DecodeString(cryted)
 	}
-	shab := sha256.Sum256([]byte(key))
-	k := pbkdf2.Key(shab[:], salt, iterationCount, 32, sha3.New256)
+	shaBytes := sha256.Sum256([]byte(key))
+	k := pbkdf2.Key(shaBytes[:], salt, iterationCount, 32, sha3.New256)
 	// 分组秘钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
@@ -99,7 +99,8 @@ func pkcs7UnPadding(origData []byte) []byte {
 
 //使用AES-GCM加密
 func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
-    block, err := aes.NewCipher(sha256.Sum256(key)[:])
+	shaBytes:=sha256.Sum256(key)
+    block, err := aes.NewCipher(shaBytes[:])
     if err != nil {
         panic(err.Error())
     }
@@ -113,7 +114,8 @@ func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
 
 //使用AES-GCM解密
 func AesGCMDecrypt(ciphertext, key, nonce []byte) []byte {
-    block, err := aes.NewCipher(sha256.Sum256(key)[:])
+	shaBytes:=sha256.Sum256(key)
+    block, err := aes.NewCipher(shaBytes[:])
     if err != nil {
         panic(err.Error())
     }
