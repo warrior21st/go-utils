@@ -1,6 +1,7 @@
 package fileutil
 
 import (
+	"io/fs"
 	"io/ioutil"
 	"os"
 )
@@ -10,14 +11,24 @@ func ReadFile(path string) string {
 }
 
 func ReadFileBytes(path string) []byte {
-	f, err := os.Open(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
 
-	// 要记得关闭
-	defer f.Close()
-	byteValue, _ := ioutil.ReadAll(f)
+	return b
+}
 
-	return byteValue
+func WriteFile(path string, content string) {
+	err := ioutil.WriteFile(path, []byte(content), fs.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func AppendToFile(path string, content string) {
+	err := ioutil.WriteFile(path, []byte(content), fs.ModeAppend)
+	if err != nil {
+		panic(err)
+	}
 }
