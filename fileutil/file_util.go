@@ -27,7 +27,7 @@ func WriteFile(path string, content string) {
 
 func AppendToFile(path string, content string) {
 	//Append second line
-	file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		panic(err)
 	}
