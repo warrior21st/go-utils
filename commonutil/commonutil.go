@@ -256,7 +256,12 @@ func Hex2Bytes(s string) []byte {
 	if len(s)%2 == 1 {
 		s = "0" + s
 	}
-	return Hex2Bytes(s)
+	b, err := hex.DecodeString(s)
+	if err != nil {
+		panic(err)
+	}
+
+	return b
 }
 
 // has0xPrefix validates str begins with '0x' or '0X'.
