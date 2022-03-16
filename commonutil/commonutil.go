@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -186,7 +187,12 @@ func MapPath(uri string) string {
 	path := GetProgramRootPath()
 	arr := strings.Split(uri, "/")
 	for s := range arr {
-		if !IsNilOrWhiteSpace(arr[s]) {
+		if IsNilOrWhiteSpace(arr[s]) || arr[s] == "." {
+			continue
+		}
+		if arr[s] == ".." {
+			path = filepath.Dir(path)
+		} else {
 			path = CombinePath(path, arr[s])
 		}
 	}
