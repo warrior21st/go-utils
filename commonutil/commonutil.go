@@ -4,9 +4,11 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"math/big"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
+	"time"
 	"unsafe"
 
 	"github.com/shopspring/decimal"
@@ -280,4 +282,32 @@ func AppendToFile(filename string, text string) {
 	if _, err = f.WriteString(text); err != nil {
 		panic(err)
 	}
+}
+
+//时间转字符串
+func TimeToString(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05")
+}
+
+//时间转字符串
+func TimeToDateString(t time.Time) string {
+	return t.Format("2006-01-02")
+}
+
+//字符串转时间
+func StringToTime(s string) time.Time {
+	t, err := time.Parse("2006-01-02 15:04:05", s)
+	if err != nil {
+		panic(err)
+	}
+
+	return t
+}
+
+func GenRandom(max int64) int64 {
+	if max < 0 {
+		max = max * -1
+	}
+	r := rand.NewSource(time.Now().UnixNano())
+	return r.Int63() % (max + 1)
 }
