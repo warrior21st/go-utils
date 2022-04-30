@@ -317,3 +317,11 @@ func GenRandom(max int64) int64 {
 	r := rand.NewSource(time.Now().UnixNano())
 	return r.Int63() % (max + 1)
 }
+
+func TrimUselessZero(decimalStr string) string {
+	result := decimalStr
+	for strings.Contains(result, ".") && (result[len(result)-1] == '0' || result[len(result)-1] == '.') {
+		result = result[:len(result)-1]
+	}
+	return result
+}
