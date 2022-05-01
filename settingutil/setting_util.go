@@ -40,5 +40,6 @@ func GetSettingFilePath() string {
 		}
 	}
 
+	//
 	return _settingFilePath
 }
