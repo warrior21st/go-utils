@@ -25,7 +25,10 @@ func GetAppSetting(keys string) string {
 //获取appsetting文件位置
 func GetSettingFilePath() string {
 	if commonutil.IsNilOrWhiteSpace(_settingFilePath) {
-		_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.test.json")
+		_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.development.json")
+		if !commonutil.IsExistPath(_settingFilePath) {
+			_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.test.json")
+		}
 		if !commonutil.IsExistPath(_settingFilePath) {
 			_settingFilePath = commonutil.CombinePath(commonutil.GetProgramRootPath(), "appsettings.production.json")
 		}
