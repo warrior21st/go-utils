@@ -292,17 +292,17 @@ func AppendToFile(filename string, text string) {
 
 //时间转字符串
 func TimeToString(t time.Time) string {
-	return t.Format("2006-01-02 15:04:05")
+	return t.UTC().Format("2006-01-02 15:04:05")
 }
 
 //时间转字符串
 func TimeToDateString(t time.Time) string {
-	return t.Format("2006-01-02")
+	return t.UTC().Format("2006-01-02")
 }
 
 //字符串转时间
 func StringToTime(s string) time.Time {
-	t, err := time.Parse("2006-01-02 15:04:05", s)
+	t, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.UTC)
 	if err != nil {
 		panic(err)
 	}

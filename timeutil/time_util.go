@@ -14,26 +14,26 @@ const (
 )
 
 //是否为有效的时间
-func IsValidTime(t *time.Time) bool {
-	return t != nil && t.Unix() > 0
+func IsValidTime(t time.Time) bool {
+	return t.Unix() > 0
 }
 
 //unix时间戳转换为时间
-func UnixSecsToTime(seconds int64) *time.Time {
+func UnixSecsToTime(seconds int64) time.Time {
 	t := time.Unix(seconds, 0)
 
-	return &t
+	return t
 }
 
 //时间转为unix时间戳
-func TimeToUnixSecs(t *time.Time) int64 {
+func TimeToUnixSecs(t time.Time) int64 {
 	return t.Unix()
 }
 
 //utc时间转北京时间
-func UTCTimeToBeijingTime(t *time.Time) *time.Time {
+func UTCTimeToBeijingTime(t time.Time) time.Time {
 	t1 := t.Add(time.Hour * 8)
-	return &t1
+	return t1
 }
 
 //转为中文字符串
@@ -42,33 +42,33 @@ func TimeToChineseString(t *time.Time) string {
 }
 
 //获取指定时间当天的开始时间
-func GetTimeDayStart(t *time.Time) *time.Time {
+func GetTimeDayStart(t time.Time) time.Time {
 	return StringToTime(TimeToDateString(t) + " 00:00:00")
 }
 
 //时间转字符串
-func TimeToString(t *time.Time) string {
-	return t.Format(TimeLayoutStr)
+func TimeToString(t time.Time) string {
+	return t.UTC().Format("2006-01-02 15:04:05")
 }
 
 //时间转字符串
-func TimeToDateString(t *time.Time) string {
-	return t.Format(DateLayoutStr)
+func TimeToDateString(t time.Time) string {
+	return t.UTC().Format("2006-01-02")
 }
 
 //字符串转时间
-func StringToTime(s string) *time.Time {
-	t, err := time.Parse(TimeLayoutStr, StandardTimeString(s))
+func StringToTime(s string) time.Time {
+	t, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.UTC)
 	if err != nil {
 		panic(err)
 	}
 
-	return &t
+	return t
 }
 
 //字符串转时间（只保留日期）
 func StringToDate(s string) *time.Time {
-	t, err := time.Parse(TimeLayoutStr, strings.Split(StandardTimeString(s), " ")[0]+" 00:00:00")
+	t, err := time.ParseInLocation(TimeLayoutStr, strings.Split(StandardTimeString(s), " ")[0]+" 00:00:00", time.UTC)
 	if err != nil {
 		panic(err)
 	}
