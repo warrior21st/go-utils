@@ -278,7 +278,7 @@ func has0xPrefix(str string) bool {
 }
 
 func AppendToFile(filename string, text string) {
-	f, err := os.OpenFile(filename, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0755)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
