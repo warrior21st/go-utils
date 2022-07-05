@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-const iterationCount int = 1024
+const iterationCount int = 2009
 
 //aes加密
 func AesEncrypt(orig string, key string, salt string, useBase58 bool) string {
