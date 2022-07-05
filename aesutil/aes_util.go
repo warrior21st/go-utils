@@ -12,26 +12,15 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-const iterationCount int = 1000
-
-var defaultSalt = []byte{8, 6, 2, 4, 55, 0, 31, 79}
-
-//使用默认设置加密
-func AesEncryptByDefault(orig string, key string) string {
-	return AesEncrypt(orig, key, defaultSalt, true)
-}
-
-//使用默认设置解密
-func AesDecryptByDefault(orig string, key string) string {
-	return AesDecrypt(orig, key, defaultSalt, true)
-}
+const iterationCount int = 1024
 
 //aes加密
-func AesEncrypt(orig string, key string, salt []byte, useBase58 bool) string {
+func AesEncrypt(orig string, key string, salt string, useBase58 bool) string {
 	// 转成字节数组
 	origData := []byte(orig)
 	shaBytes := sha256.Sum256([]byte(key))
-	k := pbkdf2.Key(shaBytes[:], salt, iterationCount, 32, sha3.New256)
+	saltBytes := sha256.Sum256([]byte(salt))
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
 	// 分组秘钥
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
@@ -53,7 +42,7 @@ func AesEncrypt(orig string, key string, salt []byte, useBase58 bool) string {
 }
 
 //aes解密
-func AesDecrypt(cryted string, key string, salt []byte, useBase58 bool) string {
+func AesDecrypt(cryted string, key string, salt string, useBase58 bool) string {
 	var crytedByte []byte
 	// 转成字节数组
 	if useBase58 {
@@ -62,7 +51,8 @@ func AesDecrypt(cryted string, key string, salt []byte, useBase58 bool) string {
 		crytedByte, _ = base64.StdEncoding.DecodeString(cryted)
 	}
 	shaBytes := sha256.Sum256([]byte(key))
-	k := pbkdf2.Key(shaBytes[:], salt, iterationCount, 32, sha3.New256)
+	saltBytes := sha256.Sum256([]byte(salt))
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
 	// 分组秘钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
@@ -99,33 +89,33 @@ func pkcs7UnPadding(origData []byte) []byte {
 
 //使用AES-GCM加密(nonce必须为12位)
 func AesGCMEncrypt(plaintext, key, nonce []byte) []byte {
-	shaBytes:=sha256.Sum256(key)
-    block, err := aes.NewCipher(shaBytes[:])
-    if err != nil {
-        panic(err.Error())
-    }
-    aesgcm, err := cipher.NewGCM(block)
-    if err != nil {
-        panic(err.Error())
-    }
-    ciphertext := aesgcm.Seal(nil, nonce, plaintext, nil)
-    return ciphertext
+	shaBytes := sha256.Sum256(key)
+	block, err := aes.NewCipher(shaBytes[:])
+	if err != nil {
+		panic(err.Error())
+	}
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+	ciphertext := aesgcm.Seal(nil, nonce, plaintext, nil)
+	return ciphertext
 }
 
 //使用AES-GCM解密(nonce必须为12位)
 func AesGCMDecrypt(ciphertext, key, nonce []byte) []byte {
-	shaBytes:=sha256.Sum256(key)
-    block, err := aes.NewCipher(shaBytes[:])
-    if err != nil {
-        panic(err.Error())
-    }
-    aesgcm, err := cipher.NewGCM(block)
-    if err != nil {
-        panic(err.Error())
-    }
-    plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)
-    if err != nil {
-        panic(err.Error())
-    }
-    return plaintext
+	shaBytes := sha256.Sum256(key)
+	block, err := aes.NewCipher(shaBytes[:])
+	if err != nil {
+		panic(err.Error())
+	}
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+	plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		panic(err.Error())
+	}
+	return plaintext
 }
