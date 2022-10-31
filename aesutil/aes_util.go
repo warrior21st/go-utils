@@ -96,13 +96,13 @@ func AesEncryptWithIterations(orig string, key string, salt string, iterations i
 }
 
 //aes解密
-func AesDecryptWithIterations(cryted string, key string, salt string) string {
+func AesDecryptWithIterations(cryted string, key string, salt string, iterations int) string {
 	var crytedByte []byte
 	// 转成字节数组
 	crytedByte, _ = base64.StdEncoding.DecodeString(cryted)
 	shaBytes := sha256.Sum256([]byte(key))
 	saltBytes := sha256.Sum256([]byte(salt))
-	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterations, 32, sha3.New256)
 	// 分组秘钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
