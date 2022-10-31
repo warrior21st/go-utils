@@ -95,6 +95,34 @@ func AesEncryptWithIterations(orig string, key string, salt string, iterations i
 	return base64.StdEncoding.EncodeToString(cryted)
 }
 
+//aes解密
+func AesDecryptWithIterations(cryted string, key string, salt string) string {
+	var crytedByte []byte
+	// 转成字节数组
+	crytedByte, _ = base64.StdEncoding.DecodeString(cryted)
+	shaBytes := sha256.Sum256([]byte(key))
+	saltBytes := sha256.Sum256([]byte(salt))
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
+	// 分组秘钥
+	block, err := aes.NewCipher(k)
+	if err != nil {
+		panic(err)
+	}
+
+	// 获取秘钥块的长度
+	blockSize := block.BlockSize()
+	// 加密模式
+	blockMode := cipher.NewCBCDecrypter(block, k[:blockSize])
+	// 创建数组
+	orig := make([]byte, len(crytedByte))
+	// 解密
+	blockMode.CryptBlocks(orig, crytedByte)
+	// 去补全码
+	orig = pkcs7UnPadding(orig)
+
+	return string(orig)
+}
+
 //补码
 func pkcs7Padding(ciphertext []byte, blocksize int) []byte {
 	padding := blocksize - len(ciphertext)%blocksize
