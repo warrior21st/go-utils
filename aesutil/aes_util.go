@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-const iterationCount int = 2009
+const defaultIterations int = 2018
 
 //aes加密
 func AesEncrypt(orig string, key string, salt string, useBase58 bool) string {
@@ -20,7 +20,7 @@ func AesEncrypt(orig string, key string, salt string, useBase58 bool) string {
 	origData := []byte(orig)
 	shaBytes := sha256.Sum256([]byte(key))
 	saltBytes := sha256.Sum256([]byte(salt))
-	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], defaultIterations, 32, sha3.New256)
 	// 分组秘钥
 	block, _ := aes.NewCipher(k)
 	// 获取秘钥块的长度
@@ -52,7 +52,7 @@ func AesDecrypt(cryted string, key string, salt string, useBase58 bool) string {
 	}
 	shaBytes := sha256.Sum256([]byte(key))
 	saltBytes := sha256.Sum256([]byte(salt))
-	k := pbkdf2.Key(shaBytes[:], saltBytes[:], iterationCount, 32, sha3.New256)
+	k := pbkdf2.Key(shaBytes[:], saltBytes[:], defaultIterations, 32, sha3.New256)
 	// 分组秘钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
