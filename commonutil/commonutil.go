@@ -4,7 +4,8 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"math/big"
-	"math/rand"
+
+	// "math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
 )
 
@@ -64,11 +66,21 @@ func ParseInt(s string) int {
 	return i
 }
 
+func TryParseInt(s string) int {
+	var i, _ = strconv.Atoi(s)
+	return i
+}
+
 func ParseInt64(s string) int64 {
 	var i, err = strconv.ParseInt(s, 10, 64)
 	if err != nil {
 		panic(err)
 	}
+	return i
+}
+
+func TryParseInt64(s string) int64 {
+	var i, _ = strconv.ParseInt(s, 10, 64)
 	return i
 }
 
@@ -81,10 +93,25 @@ func ParseInt32(s string) int32 {
 	return int32(i)
 }
 
+func TryParseInt32(s string) int32 {
+	var i, _ = strconv.ParseInt(s, 10, 32)
+
+	return int32(i)
+}
+
 func ParseDecimal(s string) decimal.Decimal {
 	d, err := decimal.NewFromString(s)
 	if err != nil {
 		panic(err)
+	}
+
+	return d
+}
+
+func TryParseDecimal(s string) decimal.Decimal {
+	d, err := decimal.NewFromString(s)
+	if err != nil {
+		return decimal.Zero
 	}
 
 	return d
@@ -99,6 +126,12 @@ func ParseFloat64(s string) float64 {
 	return f
 }
 
+func TryParseFloat64(s string) float64 {
+	f, _ := strconv.ParseFloat(s, 64)
+
+	return f
+}
+
 func ParseFloat32(s string) float32 {
 	f, err := strconv.ParseFloat(s, 32)
 	if err != nil {
@@ -108,11 +141,25 @@ func ParseFloat32(s string) float32 {
 	return float32(f)
 }
 
+func TryParseFloat32(s string) float32 {
+	f, _ := strconv.ParseFloat(s, 32)
+
+	return float32(f)
+}
+
 func IntToString(i int) string {
 	return strconv.Itoa(i)
 }
 
+func FormatInt(i int) string {
+	return strconv.Itoa(i)
+}
+
 func Int64ToString(i int64) string {
+	return strconv.FormatInt(i, 10)
+}
+
+func FormatInt64(i int64) string {
 	return strconv.FormatInt(i, 10)
 }
 
@@ -124,11 +171,19 @@ func Float64ToString(f float64) string {
 	return strconv.FormatFloat(f, 'f', -1, 64)
 }
 
+func FormatFloat64(f float64) string {
+	return strconv.FormatFloat(f, 'f', -1, 64)
+}
+
 func Float32ToString(f float32) string {
 	return Float64ToString(float64(f))
 }
 
 func DecimalToString(d decimal.Decimal) string {
+	return d.String()
+}
+
+func FormatDecimal(d decimal.Decimal) string {
 	return d.String()
 }
 
@@ -144,19 +199,26 @@ func BoolToString(b bool) string {
 	}
 }
 
+func FormatBool(b bool) string {
+	if b {
+		return "true"
+	} else {
+		return "false"
+	}
+}
+
 func IntToBool(i int32) bool {
 	return i != 0
 }
 
 //按指定的开始下标与长度截取字符串
 func Substring(source string, start int, length int) string {
-	var r = []rune(source)
-	len := len(r)
+	len := len(source)
 	if start+length > len {
 		length = len - start
 	}
 
-	return string(r[start : start+length])
+	return string(source[start : start+length])
 }
 
 func ReadFile(path string) string {
@@ -292,7 +354,11 @@ func AppendToFile(filename string, text string) {
 
 //时间转字符串
 func TimeToString(t time.Time) string {
-	return t.UTC().Format("2006-01-02 15:04:05")
+	return t.Format("2006-01-02 15:04:05")
+}
+
+func FormatTime(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05")
 }
 
 //时间转字符串
@@ -310,12 +376,34 @@ func StringToTime(s string) time.Time {
 	return t
 }
 
+func ParseTime(s string) time.Time {
+	t, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.UTC)
+	if err != nil {
+		panic(err)
+	}
+
+	return t
+}
+
+func TryParseTime(s string) time.Time {
+	t, err := time.ParseInLocation("2006-01-02 15:04:05", s, time.UTC)
+	if err != nil {
+		return time.Unix(0, 0)
+	}
+
+	return t
+}
+
 func GenRandom(max int64) int64 {
 	if max < 0 {
 		max = max * -1
 	}
-	r := rand.NewSource(time.Now().UnixNano())
-	return r.Int63() % (max + 1)
+	r := [16]byte(uuid.New())
+	rBig := big.NewInt(0)
+	rBig.Abs(big.NewInt(0).SetBytes(r[:]))
+	rBig.Mod(rBig, big.NewInt(max+1))
+
+	return rBig.Int64()
 }
 
 func TrimUselessZero(decimalStr string) string {

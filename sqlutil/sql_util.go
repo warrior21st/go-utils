@@ -92,5 +92,5 @@ func TimeStrToOracleSqlStr(timeStr string) string {
 
 //时间转为oracle to_date形式的字符串
 func TimeToOracleSqlStr(t *time.Time) string {
-	return TimeStrToOracleSqlStr(timeutil.TimeToString(t))
+	return TimeStrToOracleSqlStr(timeutil.TimeToString(*t))
 }
