@@ -413,3 +413,7 @@ func TrimUselessZero(decimalStr string) string {
 	}
 	return result
 }
+
+func Concat(texts ...string) string {
+	return strings.Join(texts, "")
+}
