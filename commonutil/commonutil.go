@@ -354,11 +354,11 @@ func AppendToFile(filename string, text string) {
 
 //时间转字符串
 func TimeToString(t time.Time) string {
-	return t.Format("2006-01-02 15:04:05")
+	return t.UTC().Format("2006-01-02 15:04:05")
 }
 
 func FormatTime(t time.Time) string {
-	return t.Format("2006-01-02 15:04:05")
+	return t.UTC().Format("2006-01-02 15:04:05")
 }
 
 //时间转字符串
