@@ -123,6 +123,53 @@ func AesDecryptWithIterations(cryted string, key string, salt string, iterations
 	return string(orig)
 }
 
+func AesEncryptBase58(orig string, key string, salt string, iterations int) string {
+	// 转成字节数组
+	origData := []byte(orig)
+	keyBytes := sha256.Sum256([]byte(key))
+	saltBytes := sha256.Sum256([]byte(salt))
+	k := pbkdf2.Key(keyBytes[:], saltBytes[:], iterations, 32, sha3.New256)
+	// 分组秘钥
+	block, _ := aes.NewCipher(k)
+	// 获取秘钥块的长度
+	blockSize := block.BlockSize()
+	// 补全码
+	origData = pkcs7Padding(origData, blockSize)
+	// 加密模式
+	blockMode := cipher.NewCBCEncrypter(block, k[:blockSize])
+	// 创建数组
+	cryted := make([]byte, len(origData))
+	// 加密
+	blockMode.CryptBlocks(cryted, origData)
+
+	return base58util.Base58Encode(cryted)
+}
+
+func AesDecryptBase58(cryted string, key string, salt string, iterations int) string {
+	crytedByte := base58util.Base58DecodeToBytes([]byte(cryted))
+	keyBytes := sha256.Sum256([]byte(key))
+	saltBytes := sha256.Sum256([]byte(salt))
+	k := pbkdf2.Key(keyBytes[:], saltBytes[:], defaultIterations, 32, sha3.New256)
+	// 分组秘钥
+	block, err := aes.NewCipher(k)
+	if err != nil {
+		panic(err)
+	}
+
+	// 获取秘钥块的长度
+	blockSize := block.BlockSize()
+	// 加密模式
+	blockMode := cipher.NewCBCDecrypter(block, k[:blockSize])
+	// 创建数组
+	orig := make([]byte, len(crytedByte))
+	// 解密
+	blockMode.CryptBlocks(orig, crytedByte)
+	// 去补全码
+	orig = pkcs7UnPadding(orig)
+
+	return string(orig)
+}
+
 //补码
 func pkcs7Padding(ciphertext []byte, blocksize int) []byte {
 	padding := blocksize - len(ciphertext)%blocksize
