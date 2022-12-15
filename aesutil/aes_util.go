@@ -149,7 +149,7 @@ func AesDecryptBase58(cryted string, key string, salt string, iterations int) st
 	crytedByte := base58util.Base58DecodeToBytes([]byte(cryted))
 	keyBytes := sha256.Sum256([]byte(key))
 	saltBytes := sha256.Sum256([]byte(salt))
-	k := pbkdf2.Key(keyBytes[:], saltBytes[:], defaultIterations, 32, sha3.New256)
+	k := pbkdf2.Key(keyBytes[:], saltBytes[:], iterations, 32, sha3.New256)
 	// 分组秘钥
 	block, err := aes.NewCipher(k)
 	if err != nil {
