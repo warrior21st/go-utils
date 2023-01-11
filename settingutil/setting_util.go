@@ -25,6 +25,10 @@ func GetAppSetting(keys string) string {
 	return jsonutil.ReadJsonValFromDecodedBytes(_settingsCache, keys)
 }
 
+func GetAppSettingOrigin(keys string) interface{} {
+	return jsonutil.ReadJsonValOrigin(_settingsCache, keys)
+}
+
 //获取appsetting文件位置
 func GetSettingFilePath() string {
 	if commonutil.IsNilOrWhiteSpace(_settingFilePath) {

@@ -72,6 +72,31 @@ func ReadJsonValFromDecodedBytes(f interface{}, keys string) string {
 	return val
 }
 
+func ReadJsonValOrigin(f interface{}, keys string) interface{} {
+	var val interface{}
+	ftemp := f
+	ok := true
+	keysArr := strings.Split(keys, ":")
+	l := len(keysArr)
+	for i := 0; i < l; i++ {
+		m := ftemp.(map[string]interface{})
+		if i < l-1 {
+			ftemp, ok = m[keysArr[i]]
+			if !ok {
+				panic(fmt.Errorf("can not found key '%s' from appsettings", keys))
+			}
+		} else {
+			if val, ok = m[keysArr[i]]; !ok {
+				panic(fmt.Errorf("can not found key '%s' from appsettings", keys))
+			}
+
+			return val
+		}
+	}
+
+	return val
+}
+
 func Serialize(val *interface{}) *string {
 	bytes, err := json.Marshal(val)
 	if err == nil {
