@@ -3,6 +3,7 @@ package commonutil
 import (
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"math/big"
 
 	// "math/rand"
@@ -28,26 +29,26 @@ func EqualStringIgnoreCase(a, b string) bool {
 }
 
 //判断字符串是否包含数组中任意一个元素
-func StringContainsAny(s string, arr *[]string) {
-	b := false
-	for i := range *arr {
-		b = strings.Contains(s, (*arr)[i])
-		if b {
-			break
+func StringContainsAny(s string, arr []string) bool {
+	for i := range arr {
+		if strings.Contains(s, arr[i]) {
+			return true
 		}
 	}
+
+	return false
 }
 
 //判断字符串是否包含数组中任意一个元素，忽略大小写
-func StringContainsAnyIgnoreCase(s string, arr *[]string) {
+func StringContainsAnyIgnoreCase(s string, arr []string) bool {
 	ss := strings.ToLower(s)
-	b := false
-	for i := range *arr {
-		b = strings.Contains(ss, strings.ToLower((*arr)[i]))
-		if b {
-			break
+	for i := range arr {
+		if strings.Contains(ss, strings.ToLower(arr[i])) {
+			return true
 		}
 	}
+
+	return false
 }
 
 func BytesToStringNoCopy(bytes *[]byte) *string {
@@ -188,7 +189,7 @@ func FormatDecimal(d decimal.Decimal) string {
 }
 
 func ParseBool(b string) bool {
-	return b != "0"
+	return b != "0" && !strings.EqualFold(b, "true")
 }
 
 func BoolToString(b bool) string {
@@ -395,8 +396,8 @@ func TryParseTime(s string) time.Time {
 }
 
 func GenRandom(max int64) int64 {
-	if max < 0 {
-		max = max * -1
+	if max <= 0 {
+		panic(errors.New("max can not equal or less than 0"))
 	}
 	r := [16]byte(uuid.New())
 	rBig := big.NewInt(0)
